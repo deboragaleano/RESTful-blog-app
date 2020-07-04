@@ -1,0 +1,24 @@
+
+<%- include("partials/header") %>
+<div class="ui main text container segment">
+  <div class="ui huge header">New workout</div>
+  <form class="ui form" action="/workouts" method="POST">
+    <div class="field">
+      <label>Title</label>
+      <input type="text" name="workout[title]" placeholder="Title">
+    </div>
+    <div class="field">
+      <label>Video Link</label>
+      <input type="text" name="workout[video]" placeholder="Video Link">
+    </div>
+    <div class="field">
+      <label>Description</label>
+      <textarea name="workout[description]"></textarea>
+    </div>
+    <button class="ui teal big button" type="submit">Submit</button>
+  </form>
+  <!-- <a href="/workouts">Go back</a> -->
+</div>
+
+
+<%- include("partials/footer") %>

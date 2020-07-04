@@ -13,22 +13,10 @@ app.use(bodyParser.urlencoded({extended: true}));
 const workoutSchema = new mongoose.Schema({
     title: String, 
     video: String, 
-    body: String, 
+    description: String, 
     created: {type: Date, default: Date.now}
 })
 const Workout = mongoose.model('Workout', workoutSchema); 
-
-// Workout.create({
-//     title: '30-Minute Cardio Latin Dance Workout', 
-//     video: 'https://www.youtube.com/embed/8DZktowZo_k',
-//     body: 'Cardio is more than just running on a treadmill! This Latin dance workout proves you can get your heart rate up while shaking your hips and shimmying your shoulders. Nicole Steen, a cardio dance expert at Equinox, knows how to keep you moving and to keep it fun. New to dance? No worries, we offer modifications. Press play and get ready to cha-cha.',
-// }, (err, workout) => {
-//     if(err) {
-//         console.log(err);
-//     } else {
-//         console.log(workout)
-//     }
-// })
 
 // RESTFUL ROUTES
 
@@ -42,6 +30,29 @@ app.get('/workouts', (req, res) => {
             console.log(err);
         } else {
             res.render('index', {workouts: workouts})
+        }
+    })
+})
+
+/* New */
+app.get('/workouts/new', (req, res) => {
+    res.render('new');  
+})
+
+/* Create */
+app.post('/workouts', (req, res) => {
+    const newWorkout = req.body.workout
+    // It will look like this: 
+    // const newWorkout = {
+    //     title: workout.title, 
+    //     video: workout.video,
+    //     description:  workout.description
+    // }
+    Workout.create(newWorkout, (err, workout) => {
+        if(err) {
+            console.log(err);
+        } else {
+            res.redirect('workouts')
         }
     })
 })
