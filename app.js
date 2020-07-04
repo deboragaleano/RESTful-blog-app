@@ -57,6 +57,20 @@ app.post('/workouts', (req, res) => {
     })
 })
 
+/* Show */
+app.get('/workouts/:id', (req, res) => {
+    let id = req.params.id; 
+
+    Workout.findById(id, (err, foundWorkout)  => {
+        if(err) {
+            console.log(err);    
+        } else {
+            res.render('show', {workout: foundWorkout})
+        }
+    })
+})
+
+
 app.listen(3000, ()=> {
-    console.log('its working');
+    console.log('Server is connected');
 })
