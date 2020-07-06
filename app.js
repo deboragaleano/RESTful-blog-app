@@ -1,13 +1,16 @@
-const bodyParser = require('body-parser'),
+const bodyParser = require('body-parser'), 
+      methodOverride = require('method-override'),
       mongoose = require('mongoose'),
       express = require('express'), 
       app = express(); 
 
 // APP CONFIG
 mongoose.connect('mongodb://localhost/workout_app', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.set('useFindAndModify', false); 
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(methodOverride('_method')); 
 
 // MONGOOSE/MODEL CONFIG 
 const workoutSchema = new mongoose.Schema({
@@ -70,6 +73,31 @@ app.get('/workouts/:id', (req, res) => {
     })
 })
 
+/* Edit */
+app.get('/workouts/:id/edit', (req, res) => {
+    let id = req.params.id; 
+
+    Workout.findById(id, (err, foundWorkout)  => {
+        if(err) {
+            console.log(err);    
+        } else {
+            res.render('edit', {workout: foundWorkout})
+        }
+    })
+})
+
+/* Update */
+app.put('/workouts/:id', (req, res) => {
+    let id = req.params.id; 
+    let newData = req.body.workout
+    Workout.findByIdAndUpdate(id, newData, (err, updatedWorkout)  => {
+        if(err) {
+            res.redirect('/workouts');     
+        } else {
+            res.redirect(`/workouts/${id}`)
+        }
+    })
+})
 
 app.listen(3000, ()=> {
     console.log('Server is connected');
