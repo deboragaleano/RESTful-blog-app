@@ -1,15 +1,32 @@
 <%- include("partials/header") %>
 
-<div class="ui container">
-    <h1>Workouts</h1>
-<% workouts.map(workout => { %>
-    <h3><a href="/workouts/<%= workout._id %> "><%= workout.title %></a></h3>
-    <div class="video-responsive">
-        <iframe width="420" height="315" src='<%= workout.video %>'></iframe>
+<div class="ui main text container">
+    <div class="ui huge header">Workout App</div>
+    <div class="ui top attached segment">
+        <div class="ui divided items">
+            <% workouts.map(workout => { %>
+                <div class="item">
+                    <h3><%= workout.title %></h3>
+                </div>
+                <div class="content">
+                    <div class="video-responsive">
+                        <iframe width="420" height="315" src='<%= workout.video %>'></iframe>
+                    </div>
+                    <div class="meta">
+                        <span>Added on: <%= workout.created.toDateString() %></span>
+                    </div>
+                    <div class="description">
+                        <p><%= workout.description.substring(0, 100) %>...</p>
+                    </div>
+                    <div class="extra">
+                        <a class="ui floated basic violet button" href="/workouts/<%= workout._id %>">View More
+                        <i class="right chevron icon"></i>
+                        </a>
+                    </div>
+                </div>
+            <% }) %> 
+        </div>
     </div>
-    <p><%= workout.description %> </p>
-    <p>Added on: <%= workout.created.toDateString() %></p>
-<% }) %> 
 </div>
 
 <%- include("partials/footer") %>

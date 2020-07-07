@@ -1,5 +1,6 @@
 const bodyParser = require('body-parser'), 
       methodOverride = require('method-override'),
+      expressSanitizer = require('express-sanitizer'),
       mongoose = require('mongoose'),
       express = require('express'), 
       app = express(); 
@@ -10,6 +11,7 @@ mongoose.set('useFindAndModify', false);
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(expressSanitizer()); 
 app.use(methodOverride('_method')); 
 
 // MONGOOSE/MODEL CONFIG 
@@ -44,6 +46,8 @@ app.get('/workouts/new', (req, res) => {
 
 /* Create */
 app.post('/workouts', (req, res) => {
+    //add sanitizer to avoid JS scripts to be entered through input
+    req.body.workout.body = req.sanitize(req.body.workout.body)
     const newWorkout = req.body.workout
     // It will look like this: 
     // const newWorkout = {
@@ -90,6 +94,8 @@ app.get('/workouts/:id/edit', (req, res) => {
 app.put('/workouts/:id', (req, res) => {
     let id = req.params.id; 
     let newData = req.body.workout
+    //this sanitizes the data to avoid malicious inputs
+    req.body.workout.body = req.sanitize(req.body.workout.body)
     //finds the ID and the existing workout and updates it with new data
     //it takes 3 args, id, newData and callback
     Workout.findByIdAndUpdate(id, newData, (err, updatedWorkout)  => {
@@ -112,7 +118,6 @@ app.delete('/workouts/:id', (req, res) => {
         }
     })
 })
-
 
 app.listen(3000, ()=> {
     console.log('Server is connected');
