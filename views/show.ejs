@@ -12,7 +12,10 @@
         <div class="content">
             <span>Added on: <%= workout.created.toDateString() %></span>
         </div>
-        <button><a href="/workouts/<%= workout._id%>/edit">Edit</a></button>
+        <a class="ui blue basic button" href="/workouts/<%= workout._id%>/edit">Edit</a>
+        <form id="delete" action="/workouts/<%= workout._id %>?_method=DELETE" method="POST">
+            <button class="ui red basic button">Delete</button>
+        </form>
     </div>
 
 

@@ -15,3 +15,7 @@ i.icon {
     width:100%;
     position:absolute;
 }
+
+#delete {
+    display: inline;
+}

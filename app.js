@@ -90,6 +90,8 @@ app.get('/workouts/:id/edit', (req, res) => {
 app.put('/workouts/:id', (req, res) => {
     let id = req.params.id; 
     let newData = req.body.workout
+    //finds the ID and the existing workout and updates it with new data
+    //it takes 3 args, id, newData and callback
     Workout.findByIdAndUpdate(id, newData, (err, updatedWorkout)  => {
         if(err) {
             res.redirect('/workouts');     
@@ -98,6 +100,19 @@ app.put('/workouts/:id', (req, res) => {
         }
     })
 })
+
+/* Delete */
+app.delete('/workouts/:id', (req, res) => {
+    let id = req.params.id; 
+    Workout.findByIdAndDelete(id, (err)  => {
+        if(err) {
+            res.redirect('/workouts');     
+        } else {
+            res.redirect('/workouts'); 
+        }
+    })
+})
+
 
 app.listen(3000, ()=> {
     console.log('Server is connected');
