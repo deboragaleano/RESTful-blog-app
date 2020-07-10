@@ -1,9 +1,11 @@
 const bodyParser = require('body-parser'), 
+      PORT = 3000,
       methodOverride = require('method-override'),
       expressSanitizer = require('express-sanitizer'),
       mongoose = require('mongoose'),
       express = require('express'), 
-      app = express(); 
+      app = express(), 
+      Workout = require('./models/workout') 
 
 // APP CONFIG
 mongoose.connect('mongodb://localhost/workout_app', { useNewUrlParser: true, useUnifiedTopology: true });
@@ -14,17 +16,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(expressSanitizer()); 
 app.use(methodOverride('_method')); 
 
-// MONGOOSE/MODEL CONFIG 
-const workoutSchema = new mongoose.Schema({
-    title: String, 
-    video: String, 
-    description: String, 
-    created: {type: Date, default: Date.now}
-})
-const Workout = mongoose.model('Workout', workoutSchema); 
-
 // RESTFUL ROUTES
-
 app.get('/', (req, res) => {
     res.redirect('/workouts');     
 })
@@ -119,6 +111,6 @@ app.delete('/workouts/:id', (req, res) => {
     })
 })
 
-app.listen(3000, ()=> {
-    console.log('Server is connected');
+app.listen(PORT, ()=> {
+    console.log(`Server is running on:${PORT}`);
 })
