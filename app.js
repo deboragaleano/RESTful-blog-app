@@ -5,8 +5,10 @@ const bodyParser = require('body-parser'),
       mongoose = require('mongoose'),
       express = require('express'), 
       app = express(), 
-      Workout = require('./models/workout') 
+      Workout = require('./models/workout'),
+      seedsDB = require('./seeds') 
 
+// seedsDB();      
 // APP CONFIG
 mongoose.connect('mongodb://localhost/workout_app', { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.set('useFindAndModify', false); 
