@@ -16,7 +16,7 @@
         <form id="delete" action="/workouts/<%= workout._id %>?_method=DELETE" method="POST">
             <button class="ui red basic button">Delete</button>
             <% workout.comments.map(comment => { %>
-                <p><%= comment %> </p>
+                <p><%= comment.text %> - <strong><%= comment.author %> </strong> </p>
             <% }) %>
         </form>
     </div>

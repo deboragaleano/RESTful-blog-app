@@ -61,11 +61,12 @@ app.post('/workouts', (req, res) => {
 /* Show */
 app.get('/workouts/:id', (req, res) => {
     let id = req.params.id; 
-
-    Workout.findById(id, (err, foundWorkout)  => {
+    // here we need to populate the comments into Workout and execute it 
+    Workout.findById(id).populate('comments').exec((err, foundWorkout) => {
         if(err) {
             console.log(err);    
         } else {
+            // console.log(foundWorkout);
             res.render('show', {workout: foundWorkout})
         }
     })

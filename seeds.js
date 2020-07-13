@@ -49,7 +49,7 @@ const seedDB = () => {
                 }
                 console.log('added workout');     
                 
-                // create a comment
+                // create a comment to each workout
                 Comment.create({
                     text: 'This workout is great', 
                     author: 'Someone'
@@ -61,7 +61,6 @@ const seedDB = () => {
                         workout.save(); 
                         console.log('Created new comment');
                     }
-
                 })
             })
         })
