@@ -6,6 +6,7 @@ const bodyParser = require('body-parser'),
       express = require('express'), 
       app = express(), 
       Workout = require('./models/workout'),
+      Comment = require('./models/comment'),
       seedsDB = require('./seeds') 
 
 // seedsDB();      
@@ -110,6 +111,46 @@ app.delete('/workouts/:id', (req, res) => {
             res.redirect('/workouts');     
         } else {
             res.redirect('/workouts'); 
+        }
+    })
+})
+
+// =====================
+// COMMENT ROUTES
+// =====================
+
+// add new - this will be the form
+app.get('/workouts/:id/comments/new', (req, res) => {
+    let id = req.params.id; 
+
+    Workout.findById(id, (err, foundWorkout) => {
+        if(err) {
+            console.log(err)            
+        } else {
+            res.render('comments/show', {workout: foundWorkout}); 
+        }
+    })
+})
+
+// create comment
+app.post('/workouts/:id/comments', (req, res) => {
+    let id = req.params.id; 
+    let newComment = req.body.comment; 
+    Workout.findById(id, (err, foundWorkout) => {
+        if(err) {
+            console.log(err)
+        } else {
+            //once found right workout, add comment, push into array 
+            // save and redirect
+            Comment.create(newComment, (err, comment) => {
+                if(err) {
+                    console.log(err)
+                } else {
+                    foundWorkout.comments.push(comment);
+                    foundWorkout.save(); 
+                    res.redirect(`/workouts/${id}`); 
+                }
+            })
         }
     })
 })
