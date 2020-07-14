@@ -16,33 +16,31 @@
             <button class="ui red basic button">Delete</button>
         </form>
         <div class="ui secondary segment">
-            <a class="ui right floated button" href="/workouts/<%= workout._id%>/comments/new">Add comment</a>
-
-        <div class="ui comments">
-            <h3 class="ui dividing header">Comments</h3>
-            <div class="comment">
-                <div class="content">
-                    <% workout.comments.map(comment => { %> 
-                        <a class="avatar">
-                            <img src="https://image.flaticon.com/icons/svg/194/194938.svg">
-                          </a>              
-                    <a class="author"><%= comment.author %></a>
-                    <div class="metadata">
-                        <span class="date">Today at 5:42PM</span>
-                    </div>
-                    <div class="text">
-                        <%= comment.text %>
+        <a class="ui right floated button" href="/workouts/<%= workout._id%>/comments/new">Add comment</a>
+            <div class="ui comments">
+                <h3 class="ui dividing header">Comments</h3>
+                <div class="comment">
+                <% workout.comments.map(comment => { %>  
+                    <a class="avatar">
+                        <img src="https://image.flaticon.com/icons/svg/194/194938.svg">
+                    </a> 
+                    <div class="content">
+                        <a class="author"><%= comment.author %></a>
+                        <div class="metadata">
+                            <span class="date">Today at 5:42PM</span>
+                        </div>
+                        <div class="text">
+                            <%= comment.text %>
+                        </div>
+                        <div class="actions">
+                            <a class="reply">Reply</a>
+                        </div>
                     </div>
                     <% }) %>
-                    <div class="actions">
-                        <a class="reply">Reply</a>
-                    </div>
                 </div>
             </div>
         </div>
-        </div>
     </div>
-
 
             
 <%- include("partials/footer") %>
