@@ -153,7 +153,8 @@ app.delete('/workouts/:id', (req, res) => {
 // COMMENT ROUTES
 
 // add new - this will be the form
-app.get('/workouts/:id/comments/new', (req, res) => {
+// here we add the middleware to send the user to login if not loggedin already 
+app.get('/workouts/:id/comments/new', isLoggedIn, (req, res) => {
     let id = req.params.id; 
 
     Workout.findById(id, (err, foundWorkout) => {
@@ -166,7 +167,8 @@ app.get('/workouts/:id/comments/new', (req, res) => {
 })
 
 // create comment
-app.post('/workouts/:id/comments', (req, res) => {
+// here we add the middleware as well  
+app.post('/workouts/:id/comments', isLoggedIn,(req, res) => {
     let id = req.params.id; 
     let newComment = req.body.comment; 
     Workout.findById(id, (err, foundWorkout) => {
@@ -192,11 +194,6 @@ app.post('/workouts/:id/comments', (req, res) => {
 // AUTH ROUTES 
 //=================
 
-// we add the middleware here to check if loggin before showing the page
-app.get('/secret', isLoggedIn, (req, res) => {
-    res.render('secret'); 
-})
-
 /*** REGISTER ROUTE ***/  
 
 //get route for the form - to show the form
@@ -212,7 +209,8 @@ app.post('/register', (req, res) => {
     // which will NOT be saved in the DB but it will turn this into HASH
     // and this HASH password is what will be stored in the DB
     // then, THIRD our  3rd is the callback
-    User.register(new User({username: req.body.username}), req.body.password, (err, newUser) => {
+    let newUser = new User({username: req.body.username})
+    User.register(newUser, req.body.password, (err, user) => {
         if(err) {
             console.log(err);
             res.redirect('register');
@@ -223,7 +221,7 @@ app.post('/register', (req, res) => {
         // and we specify that we want to use the 'local' strategy, which can be 'twitter' or others 
         // then we add req, res and a callback 
         passport.authenticate('local')(req, res, () => {
-            res.redirect('/secret'); 
+            res.redirect('/workouts'); 
         })
     })
 
@@ -244,7 +242,7 @@ app.get('/login', (req, res) => {
 // automatically with the one HASH/info we have on our DB 
 // then we provide an object with 2 params, sucess/failure redirect
 app.post('/login', passport.authenticate('local', {
-    successRedirect: '/secret', 
+    successRedirect: '/workouts', 
     failureRedirect: '/login'
 }), (req, res) => {
 
