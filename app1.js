@@ -24,7 +24,9 @@ app.use(require('express-session')({
     resave: false,
     saveUninitialized: false
 }))
+
 //we need these lines everytime we need to use passport 
+passport.use(new LocalStrategy(User.authenticate())); 
 app.use(passport.initialize());
 app.use(passport.session()); 
 
@@ -81,9 +83,24 @@ app.post('/register', (req, res) => {
 
 /*** LOGIN ROUTE ***/  
 
+// get login shows the form
+app.get('/login', (req, res) => {
+    res.render('login'); 
+}); 
 
+// responsible for the login
+// we pass in passport as a 2nd arg here, and this is known as
+// middleware: it's some code that runs before our final route callback
+// Its called middleware because it can run before, during and after the route
+// PASSPORT here will take the username/pass from the form and compare that 
+// automatically with the one HASH/info we have on our DB 
+// then we provide an object with 2 params, sucess/failure redirect
+app.post('/login', passport.authenticate('local', {
+    successRedirect: '/secret', 
+    failureRedirect: '/login'
+}), (req, res) => {
 
-
+});
 
 
 app.listen(PORT, () => {
