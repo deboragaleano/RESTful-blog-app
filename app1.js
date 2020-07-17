@@ -102,6 +102,22 @@ app.post('/login', passport.authenticate('local', {
 
 });
 
+/*** LOGOUT ROUTE ***/  
+
+app.get('/logout', (req, res) => {
+    // with this simple line coming from passport we can logout a user
+    // and just provide the link somewhere in the browser :) 
+    req.logout(); 
+    res.redirect('/'); 
+})
+
+
+// const isLoggedIn = (req, res, next) => {
+
+// }
+
+
+
 
 app.listen(PORT, () => {
     console.log('Serving test')
