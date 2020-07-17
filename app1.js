@@ -45,7 +45,8 @@ app.get('/', (req, res) => {
     res.render('test'); 
 })
 
-app.get('/secret', (req, res) => {
+// we add the middleware here to check if loggin before showing the page
+app.get('/secret', isLoggedIn, (req, res) => {
     res.render('secret'); 
 })
 
@@ -111,13 +112,17 @@ app.get('/logout', (req, res) => {
     res.redirect('/'); 
 })
 
-
-// const isLoggedIn = (req, res, next) => {
-
-// }
-
-
-
+// HERE WE WILL ADD A MIDDLEWARE to prevent the user 
+// from going to the secret page if not loggedin 
+// this function is standard for a middleware, to use 3 params
+function isLoggedIn(req, res, next){
+    // this method comes with passport and will return next
+    // or run next, show the secret page, if not then login again 
+    if(req.isAuthenticated()) {
+        return next(); 
+    }
+    res.redirect('/login'); 
+}
 
 app.listen(PORT, () => {
     console.log('Serving test')
