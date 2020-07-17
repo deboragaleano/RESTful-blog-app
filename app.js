@@ -50,6 +50,15 @@ app.use(passport.session());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser()); 
 
+//adding middleware function to include USER in every TEMPLATE, automatically!
+// if there's no user loggined in, then req.user will be empty or undefined 
+// whatever we put in res.locals is what's available in our current templates 
+// remember to add next at the end which will allow it to run for EVERY single route - VERY IMPORTANT! 
+app.use(function(req, res, next) {
+    res.locals.currentUser = req.user;
+    next(); 
+})
+
 
 //================
 // RESTFUL ROUTES 
@@ -64,7 +73,7 @@ app.get('/workouts', (req, res) => {
         if(err) {
             console.log(err);
         } else {
-            res.render('index', {workouts: workouts})
+            res.render('index', {workouts: workouts, currentUser: req.user})
         }
     })
 })
