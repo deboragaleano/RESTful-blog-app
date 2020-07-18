@@ -1,6 +1,7 @@
 const express = require('express'); 
 const router = express.Router(); 
 const Workout = require('../models/workout'); 
+const User = require('../models/user'); 
 
 /* Index */
 router.get('/workouts', (req, res) => {
@@ -14,21 +15,30 @@ router.get('/workouts', (req, res) => {
 })
 
 /* New */
-router.get('/workouts/new', (req, res) => {
+router.get('/workouts/new', isLoggedIn, (req, res) => {
     res.render('new');  
 })
 
 /* Create */
-router.post('/workouts', (req, res) => {
+router.post('/workouts', isLoggedIn, (req, res) => {
     //add sanitizer to avoid JS scripts to be entered through input
     req.body.workout.body = req.sanitize(req.body.workout.body)
     const newWorkout = req.body.workout
+
+    //this object is for associating the user info by adding the current user (req.user)
+    const author = {
+        id: req.user._id,
+        username: req.user.username
+    }
+    newWorkout.author = author; 
     // It will look like this: 
     // const newWorkout = {
     //     title: workout.title, 
     //     video: workout.video,
-    //     description:  workout.description
+    //     description:  workout.description,
+    //     author: {id:..., username, ... }
     // }
+    console.log(newWorkout); 
     Workout.create(newWorkout, (err, workout) => {
         if(err) {
             console.log(err);
@@ -93,5 +103,14 @@ router.delete('/workouts/:id', (req, res) => {
         }
     })
 })
+
+
+//middleware
+function isLoggedIn(req, res, next){
+    if(req.isAuthenticated()) {
+        return next(); 
+    }
+    res.redirect('/login'); 
+}
 
 module.exports = router; 

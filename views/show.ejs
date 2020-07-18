@@ -9,6 +9,7 @@
             <p><%= workout.description %> </p>
         </div>
         <div class="content">
+            <p>Created by: <%= workout.author.username %> </p>
             <span>Added on: <%= workout.created.toDateString() %></span>
         </div>
         <a class="ui blue basic button" href="/workouts/<%= workout._id%>/edit">Edit</a>
