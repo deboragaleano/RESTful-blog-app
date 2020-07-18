@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router(); 
 const Workout = require('../models/workout'); 
 const Comment = require('../models/comment'); 
+const User = require('../models/user'); 
 
 
 // Comments new - this will be the form
@@ -33,6 +34,17 @@ router.post('/workouts/:id/comments', isLoggedIn,(req, res) => {
                 if(err) {
                     console.log(err)
                 } else {
+
+                    //we can add username and id to the comment by assigning the author's info 
+                    // to the current user, which is: req.user(id or username)
+                    // so, req.user contains the ID and the username, this is assuming
+                    // that a user is actually logged in thanks to the middleware
+                    
+                    comment.author.id = req.user._id;
+                    comment.author.username = req.user.username; 
+                    //here we have to save the comment 
+                    comment.save(); 
+          
                     foundWorkout.comments.push(comment);
                     foundWorkout.save(); 
                     res.redirect(`/workouts/${id}`); 
