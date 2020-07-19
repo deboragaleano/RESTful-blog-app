@@ -63,7 +63,7 @@ router.get('/workouts/:id', (req, res) => {
 })
 
 /* Edit */
-router.get('/workouts/:id/edit', (req, res) => {
+router.get('/workouts/:id/edit', isLoggedIn, (req, res) => {
     let id = req.params.id; 
 
     Workout.findById(id, (err, foundWorkout)  => {
@@ -93,7 +93,7 @@ router.put('/workouts/:id', (req, res) => {
 })
 
 /* Delete */
-router.delete('/workouts/:id', (req, res) => {
+router.delete('/workouts/:id', isLoggedIn, (req, res) => {
     let id = req.params.id; 
     Workout.findByIdAndDelete(id, (err)  => {
         if(err) {   
