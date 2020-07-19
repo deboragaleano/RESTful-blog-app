@@ -76,7 +76,7 @@ router.get('/workouts/:id/edit', isLoggedIn, (req, res) => {
 })
 
 /* Update */
-router.put('/workouts/:id', (req, res) => {
+router.put('/workouts/:id', isLoggedIn, (req, res) => {
     let id = req.params.id; 
     let newData = req.body.workout
     //this sanitizes the data to avoid malicious inputs
