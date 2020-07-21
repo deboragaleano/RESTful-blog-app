@@ -91,14 +91,10 @@ router.put('/workouts/:id', checkWorkoutOwnership, (req, res) => {
 })
 
 /* Delete */
-router.delete('/workouts/:id', isLoggedIn, (req, res) => {
+router.delete('/workouts/:id', checkWorkoutOwnership, (req, res) => {
     let id = req.params.id; 
     Workout.findByIdAndDelete(id, (err)  => {
-        if(err) {   
-            res.redirect('/workouts');     
-        } else {
             res.redirect('/workouts'); 
-        }
     })
 })
 
