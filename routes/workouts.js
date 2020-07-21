@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router(); 
 const Workout = require('../models/workout'); 
 const User = require('../models/user'); 
+const workout = require('../models/workout');
 
 /* Index */
 router.get('/workouts', (req, res) => {
@@ -63,20 +64,17 @@ router.get('/workouts/:id', (req, res) => {
 })
 
 /* Edit */
-router.get('/workouts/:id/edit', isLoggedIn, (req, res) => {
+router.get('/workouts/:id/edit', checkWorkoutOwnership, (req, res) => {
     let id = req.params.id; 
-
+    //is user logged in?
     Workout.findById(id, (err, foundWorkout)  => {
-        if(err) {
-            console.log(err);    
-        } else {
-            res.render('edit', {workout: foundWorkout})
-        }
+        res.render('edit', {workout: foundWorkout})
     })
 })
 
+
 /* Update */
-router.put('/workouts/:id', isLoggedIn, (req, res) => {
+router.put('/workouts/:id', checkWorkoutOwnership, (req, res) => {
     let id = req.params.id; 
     let newData = req.body.workout
     //this sanitizes the data to avoid malicious inputs
@@ -111,6 +109,28 @@ function isLoggedIn(req, res, next){
         return next(); 
     }
     res.redirect('/login'); 
+}
+
+//middleware ownership permission
+function checkWorkoutOwnership(req, res, next) {
+    if(req.isAuthenticated()) {
+        Workout.findById(req.params.id, (err, foundWorkout) => {
+            if(err) {
+                res.redirect('back'); 
+            } else {
+                // does user own the workout? 
+                // we use equals here, method from mongoose to check if its the same
+                if(foundWorkout.author.id.equals(req.user._id)) {
+                    next(); 
+                } else {
+                    res.redirect('back'); 
+                }
+            }
+        })
+    } else {
+        // this will take the user back to where they were 
+        res.redirect('back'); 
+    }             
 }
 
 module.exports = router; 
