@@ -1,9 +1,16 @@
 const express = require('express'); 
 const router = express.Router(); 
+const bodyParser = require('body-parser'); 
+const methodOverride = require('method-override'); 
 const Workout = require('../models/workout'); 
 const Comment = require('../models/comment'); 
 const User = require('../models/user'); 
+const { render } = require('ejs');
 
+
+
+router.use(bodyParser.urlencoded({extended: true}));
+router.use(methodOverride('_method')); 
 
 // Comments new - this will be the form
 // here we add the middleware to send the user to login if not loggedin already 
@@ -53,6 +60,45 @@ router.post('/workouts/:id/comments', isLoggedIn,(req, res) => {
         }
     })
 })
+
+//Edit comment 
+router.get('/workouts/:id/comments/:comment_id/edit', (req, res) => {
+    Comment.findById(req.params.comment_id, (err, foundComment) => {
+        if(err) {
+            res.redirect('back'); 
+        } else {
+            res.render('comments/edit', {comment: foundComment, workout_id: req.params.id}); 
+        }
+    })
+})
+
+//Update comment
+router.post('/workouts/:id/comments/:comment_id', (req, res) => {
+    const newComment = req.body.comment; 
+
+    Workout.findById(req.params.id, (err, foundWorkout) => {
+        if(err) {
+            console.log(err)
+        } else {
+            Comment.findByIdAndUpdate(req.params.comment_id, newComment, (err, updatedComment) => {
+                if(err) {
+                    console.log(err);
+                } else {
+                    foundWorkout.comments.push(updatedComment);
+                    foundWorkout.save(); 
+                    res.redirect(`workouts/${req.params.id}`)
+                }
+            })
+        }
+    })
+})
+
+// add destroy route 
+
+
+
+
+
 
 //middleware
 function isLoggedIn(req, res, next){

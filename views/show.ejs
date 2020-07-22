@@ -1,3 +1,4 @@
+
 <%- include("partials/header") %>
 
     <div class="ui main text container segment">
@@ -38,7 +39,8 @@
                             <%= comment.text %>
                         </div>
                         <div class="actions">
-                            <a class="reply">Reply</a>
+                            <a href="/workouts/<%= workout._id %>/comments/<%= comment._id %>/edit" class="edit">Edit</a>
+                            <a class="delete">Delete</a>
                         </div>
                     </div>
                     <% }) %>
