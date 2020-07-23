@@ -53,6 +53,7 @@ router.post('/workouts/:id/comments', middleware.isLoggedIn,(req, res) => {
           
                     foundWorkout.comments.push(comment);
                     foundWorkout.save(); 
+                    req.flash('success', 'Successfully added comment!');
                     res.redirect(`/workouts/${id}`); 
                 }
             })
@@ -89,7 +90,8 @@ router.delete('/workouts/:id/comments/:comment_id', middleware.checkCommentOwner
         if(err) {
             res.redirect('back');
         } else {
-            res.redirect(`/workouts/${req.params.id}`)
+            req.flash('success', 'Comment deleted');
+            res.redirect(`/workouts/${req.params.id}`); 
         }
     })
 })

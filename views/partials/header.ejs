@@ -27,7 +27,26 @@
                 <% } %> 
 
                 </div>
-        </div>
+            </div>
         </div>
     </div>
-    
+
+
+    <div class="ui container">
+        <% if(error && error.length > 0) { %> 
+        <div class="ui warning message">
+            <div class="header">
+                <%= error %> 
+            </div>
+        </div>
+        <% } %> 
+
+        <% if(success && success.length > 0) { %> 
+        <div class="ui positive message">
+            <div class="header">
+                <%= success %> 
+            </div>
+        </div>
+        <% } %> 
+        
+    </div>

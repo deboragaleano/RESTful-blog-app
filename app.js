@@ -11,6 +11,7 @@ const bodyParser = require('body-parser'),
       passport = require('passport'), 
       LocalStrategy = require('passport-local'),
       passportLocalMongoose = require('passport-local-mongoose'),
+      flash = require('connect-flash'),
       seedsDB = require('./seeds') 
 
 // requiring routes 
@@ -31,6 +32,7 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(expressSanitizer()); 
 app.use(methodOverride('_method')); 
+app.use(flash()); 
 
 //================
 // PASSPORT CONFIG 
@@ -61,6 +63,8 @@ passport.deserializeUser(User.deserializeUser());
 // remember to add next at the end which will allow it to run for EVERY single route - VERY IMPORTANT! 
 app.use(function(req, res, next) {
     res.locals.currentUser = req.user;
+    res.locals.error = req.flash('error');
+    res.locals.success = req.flash('success'); 
     next(); 
 })
 

@@ -26,7 +26,7 @@ router.post('/register', (req, res) => {
     let newUser = new User({username: req.body.username})
     User.register(newUser, req.body.password, (err, user) => {
         if(err) {
-            console.log(err);
+            req.flash('error', err.message); 
             res.redirect('register');
         } 
         // this will happen once the user has been created
@@ -35,6 +35,7 @@ router.post('/register', (req, res) => {
         // and we specify that we want to use the 'local' strategy, which can be 'twitter' or others 
         // then we add req, res and a callback 
         passport.authenticate('local')(req, res, () => {
+            req.flash('success', `Welcome to the Workout App, ${user.username}`);
             res.redirect('/workouts'); 
         })
     })
@@ -68,19 +69,8 @@ router.get('/logout', (req, res) => {
     // with this simple line coming from passport we can logout a user
     // and just provide the link somewhere in the browser :) 
     req.logout(); 
-    res.redirect('/'); 
+    req.flash('success', 'Logged you out!'); 
+    res.redirect('/workouts'); 
 })
-
-// HERE WE WILL ADD A MIDDLEWARE to prevent the user 
-// from going to the secret page if not loggedin 
-// this function is standard for a middleware, to use 3 params
-function isLoggedIn(req, res, next){
-    // this method comes with passport and will return next
-    // or run next, show the secret page, if not then login again 
-    if(req.isAuthenticated()) {
-        return next(); 
-    }
-    res.redirect('/login'); 
-}
 
 module.exports = router; 

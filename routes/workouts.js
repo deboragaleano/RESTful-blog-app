@@ -96,6 +96,7 @@ router.put('/workouts/:id', middleware.checkWorkoutOwnership, (req, res) => {
 router.delete('/workouts/:id', middleware.checkWorkoutOwnership, (req, res) => {
     let id = req.params.id; 
     Workout.findByIdAndDelete(id, (err)  => {
+            req.flash('error', 'Workout deleted');
             res.redirect('/workouts'); 
     })
 })
