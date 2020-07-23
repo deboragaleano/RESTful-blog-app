@@ -73,22 +73,13 @@ router.get('/workouts/:id/comments/:comment_id/edit', (req, res) => {
 })
 
 //Update comment
-router.post('/workouts/:id/comments/:comment_id', (req, res) => {
+router.put('/workouts/:id/comments/:comment_id', (req, res) => {
     const newComment = req.body.comment; 
-
-    Workout.findById(req.params.id, (err, foundWorkout) => {
+    Comment.findByIdAndUpdate(req.params.comment_id, newComment, (err, updatedComment) => {
         if(err) {
-            console.log(err)
+            console.log(err);
         } else {
-            Comment.findByIdAndUpdate(req.params.comment_id, newComment, (err, updatedComment) => {
-                if(err) {
-                    console.log(err);
-                } else {
-                    foundWorkout.comments.push(updatedComment);
-                    foundWorkout.save(); 
-                    res.redirect(`workouts/${req.params.id}`)
-                }
-            })
+            res.redirect(`/workouts/${req.params.id}`)
         }
     })
 })
