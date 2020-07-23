@@ -32,15 +32,19 @@
                     </a> 
                     <div class="content">
                         <a class="author"><%= comment.author.username %></a>
-                        <div class="metadata">
+                        <!-- <div class="metadata">
                             <span class="date">Today at 5:42PM</span>
-                        </div>
+                        </div> -->
                         <div class="text">
                             <%= comment.text %>
                         </div>
                         <div class="actions">
-                            <a href="/workouts/<%= workout._id %>/comments/<%= comment._id %>/edit" class="edit">Edit</a>
-                            <a class="delete">Delete</a>
+                            
+                            <button href="/workouts/<%= workout._id %>/comments/<%= comment._id %>/edit" 
+                                    class="mini ui primary tertiary button">Edit</button>
+                            <form id="delete" action="/workouts/<%= workout._id %>/comments/<%= comment._id %>?_method=DELETE" method="POST">
+                                <button class="mini ui brown tertiary button">Delete</button>
+                            </form>
                         </div>
                     </div>
                     <% }) %>

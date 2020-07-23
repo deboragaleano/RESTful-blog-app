@@ -84,8 +84,16 @@ router.put('/workouts/:id/comments/:comment_id', (req, res) => {
     })
 })
 
-// add destroy route 
-
+// Destroy route 
+router.delete('/workouts/:id/comments/:comment_id', (req, res) => {
+    Comment.findByIdAndRemove(req.params.comment_id, (err, foundComment) => {
+        if(err) {
+            res.redirect('back');
+        } else {
+            res.redirect(`/workouts/${req.params.id}`)
+        }
+    })
+})
 
 
 
