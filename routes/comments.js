@@ -62,7 +62,7 @@ router.post('/workouts/:id/comments', isLoggedIn,(req, res) => {
 })
 
 //Edit comment 
-router.get('/workouts/:id/comments/:comment_id/edit', (req, res) => {
+router.get('/workouts/:id/comments/:comment_id/edit', checkUserAuthorization, (req, res) => {
     Comment.findById(req.params.comment_id, (err, foundComment) => {
         if(err) {
             res.redirect('back'); 
@@ -73,7 +73,7 @@ router.get('/workouts/:id/comments/:comment_id/edit', (req, res) => {
 })
 
 //Update comment
-router.put('/workouts/:id/comments/:comment_id', (req, res) => {
+router.put('/workouts/:id/comments/:comment_id', checkUserAuthorization, (req, res) => {
     const newComment = req.body.comment; 
     Comment.findByIdAndUpdate(req.params.comment_id, newComment, (err, updatedComment) => {
         if(err) {
@@ -85,7 +85,7 @@ router.put('/workouts/:id/comments/:comment_id', (req, res) => {
 })
 
 // Destroy route 
-router.delete('/workouts/:id/comments/:comment_id', (req, res) => {
+router.delete('/workouts/:id/comments/:comment_id', checkUserAuthorization, (req, res) => {
     Comment.findByIdAndRemove(req.params.comment_id, (err, foundComment) => {
         if(err) {
             res.redirect('back');
@@ -96,15 +96,30 @@ router.delete('/workouts/:id/comments/:comment_id', (req, res) => {
 })
 
 
-
-
-
 //middleware
 function isLoggedIn(req, res, next){
     if(req.isAuthenticated()) {
         return next(); 
     }
     res.redirect('/login'); 
+}
+
+function checkUserAuthorization(req, res, next) {
+    if(req.isAuthenticated()) {
+        Comment.findById(req.params.comment_id, (err, foundComment) => {
+            if(err) {
+                res.redirect('back');
+            } else {
+                if(foundComment.author.id.equals(req.user._id)){
+                    next(); 
+                } else {
+                    res.redirect('back'); 
+                }
+            }
+        })
+    } else {
+        res.redirect('back'); 
+    }
 }
 
 module.exports = router;    

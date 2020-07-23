@@ -38,14 +38,15 @@
                         <div class="text">
                             <%= comment.text %>
                         </div>
+                        <% if(currentUser && comment.author.id.equals(currentUser._id)) {  %>
                         <div class="actions">
-                            
-                            <button href="/workouts/<%= workout._id %>/comments/<%= comment._id %>/edit" 
-                                    class="mini ui primary tertiary button">Edit</button>
+                            <a href="/workouts/<%= workout._id %>/comments/<%= comment._id %>/edit" 
+                                    class="mini ui blue tertiary button">Edit</a>
                             <form id="delete" action="/workouts/<%= workout._id %>/comments/<%= comment._id %>?_method=DELETE" method="POST">
                                 <button class="mini ui brown tertiary button">Delete</button>
                             </form>
                         </div>
+                        <% } %> 
                     </div>
                     <% }) %>
                 </div>
