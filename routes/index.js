@@ -5,7 +5,7 @@ const User = require('../models/user');
 
 //ROOT ROUTE
 router.get('/', (req, res) => {
-    res.redirect('/workouts');     
+    res.render('landing');     
 })
 
 /*** REGISTER ROUTE ***/  

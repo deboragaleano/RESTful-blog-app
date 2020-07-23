@@ -1,7 +1,7 @@
 <%- include("partials/header") %>
 
 <div class="ui container">
-    <div class="ui center aligned huge header">Workout App</div>
+    <div class="ui center aligned huge header">Workouts</div>
         <div class="ui stackable three column grid">
             <% workouts.map(workout => { %>
             <div class="column">
@@ -13,14 +13,10 @@
                     <div class="ui segment">
                         <div class="description">
                             <p><%= workout.description.substring(0, 100) %>...</p>
-                        </div>
-                        <!-- <div class="extra">
-                            <span>Added on: <%= workout.created.toDateString() %></span>
-                        </div> -->
-                    
+                        </div>                  
                     </div>
                     <div class="extra">
-                        <a class="ui floated basic violet button" href="/workouts/<%= workout._id %>">View More
+                        <a class="tiny ui orange button" href="/workouts/<%= workout._id %>">View More
                         <i class="right chevron icon"></i></a>
                     </div>
                 </div>
