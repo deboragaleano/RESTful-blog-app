@@ -5,8 +5,7 @@ const methodOverride = require('method-override');
 const Workout = require('../models/workout'); 
 const Comment = require('../models/comment'); 
 const User = require('../models/user'); 
-const { render } = require('ejs');
-
+const middleware = require('../middleware');
 
 
 router.use(bodyParser.urlencoded({extended: true}));
@@ -14,7 +13,7 @@ router.use(methodOverride('_method'));
 
 // Comments new - this will be the form
 // here we add the middleware to send the user to login if not loggedin already 
-router.get('/workouts/:id/comments/new', isLoggedIn, (req, res) => {
+router.get('/workouts/:id/comments/new', middleware.isLoggedIn, (req, res) => {
     let id = req.params.id; 
 
     Workout.findById(id, (err, foundWorkout) => {
@@ -28,7 +27,7 @@ router.get('/workouts/:id/comments/new', isLoggedIn, (req, res) => {
 
 // Comments create 
 // here we add the middleware as well  
-router.post('/workouts/:id/comments', isLoggedIn,(req, res) => {
+router.post('/workouts/:id/comments', middleware.isLoggedIn,(req, res) => {
     let id = req.params.id; 
     let newComment = req.body.comment; 
     Workout.findById(id, (err, foundWorkout) => {
@@ -62,7 +61,7 @@ router.post('/workouts/:id/comments', isLoggedIn,(req, res) => {
 })
 
 //Edit comment 
-router.get('/workouts/:id/comments/:comment_id/edit', checkUserAuthorization, (req, res) => {
+router.get('/workouts/:id/comments/:comment_id/edit', middleware.checkCommentOwnership, (req, res) => {
     Comment.findById(req.params.comment_id, (err, foundComment) => {
         if(err) {
             res.redirect('back'); 
@@ -73,7 +72,7 @@ router.get('/workouts/:id/comments/:comment_id/edit', checkUserAuthorization, (r
 })
 
 //Update comment
-router.put('/workouts/:id/comments/:comment_id', checkUserAuthorization, (req, res) => {
+router.put('/workouts/:id/comments/:comment_id', middleware.checkCommentOwnership, (req, res) => {
     const newComment = req.body.comment; 
     Comment.findByIdAndUpdate(req.params.comment_id, newComment, (err, updatedComment) => {
         if(err) {
@@ -85,7 +84,7 @@ router.put('/workouts/:id/comments/:comment_id', checkUserAuthorization, (req, r
 })
 
 // Destroy route 
-router.delete('/workouts/:id/comments/:comment_id', checkUserAuthorization, (req, res) => {
+router.delete('/workouts/:id/comments/:comment_id', middleware.checkCommentOwnership, (req, res) => {
     Comment.findByIdAndRemove(req.params.comment_id, (err, foundComment) => {
         if(err) {
             res.redirect('back');
@@ -94,32 +93,5 @@ router.delete('/workouts/:id/comments/:comment_id', checkUserAuthorization, (req
         }
     })
 })
-
-
-//middleware
-function isLoggedIn(req, res, next){
-    if(req.isAuthenticated()) {
-        return next(); 
-    }
-    res.redirect('/login'); 
-}
-
-function checkUserAuthorization(req, res, next) {
-    if(req.isAuthenticated()) {
-        Comment.findById(req.params.comment_id, (err, foundComment) => {
-            if(err) {
-                res.redirect('back');
-            } else {
-                if(foundComment.author.id.equals(req.user._id)){
-                    next(); 
-                } else {
-                    res.redirect('back'); 
-                }
-            }
-        })
-    } else {
-        res.redirect('back'); 
-    }
-}
 
 module.exports = router;    

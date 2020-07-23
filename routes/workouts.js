@@ -3,6 +3,8 @@ const router = express.Router();
 const Workout = require('../models/workout'); 
 const User = require('../models/user'); 
 const workout = require('../models/workout');
+const middleware = require('../middleware');
+
 
 /* Index */
 router.get('/workouts', (req, res) => {
@@ -16,12 +18,12 @@ router.get('/workouts', (req, res) => {
 })
 
 /* New */
-router.get('/workouts/new', isLoggedIn, (req, res) => {
+router.get('/workouts/new', middleware.isLoggedIn, (req, res) => {
     res.render('new');  
 })
 
 /* Create */
-router.post('/workouts', isLoggedIn, (req, res) => {
+router.post('/workouts', middleware.isLoggedIn, (req, res) => {
     //add sanitizer to avoid JS scripts to be entered through input
     req.body.workout.body = req.sanitize(req.body.workout.body)
     const newWorkout = req.body.workout
@@ -64,7 +66,7 @@ router.get('/workouts/:id', (req, res) => {
 })
 
 /* Edit */
-router.get('/workouts/:id/edit', checkWorkoutOwnership, (req, res) => {
+router.get('/workouts/:id/edit', middleware.checkWorkoutOwnership, (req, res) => {
     let id = req.params.id; 
     //is user logged in?
     Workout.findById(id, (err, foundWorkout)  => {
@@ -74,7 +76,7 @@ router.get('/workouts/:id/edit', checkWorkoutOwnership, (req, res) => {
 
 
 /* Update */
-router.put('/workouts/:id', checkWorkoutOwnership, (req, res) => {
+router.put('/workouts/:id', middleware.checkWorkoutOwnership, (req, res) => {
     let id = req.params.id; 
     let newData = req.body.workout
     //this sanitizes the data to avoid malicious inputs
@@ -91,42 +93,11 @@ router.put('/workouts/:id', checkWorkoutOwnership, (req, res) => {
 })
 
 /* Delete */
-router.delete('/workouts/:id', checkWorkoutOwnership, (req, res) => {
+router.delete('/workouts/:id', middleware.checkWorkoutOwnership, (req, res) => {
     let id = req.params.id; 
     Workout.findByIdAndDelete(id, (err)  => {
             res.redirect('/workouts'); 
     })
 })
-
-
-//middleware
-function isLoggedIn(req, res, next){
-    if(req.isAuthenticated()) {
-        return next(); 
-    }
-    res.redirect('/login'); 
-}
-
-//middleware ownership permission
-function checkWorkoutOwnership(req, res, next) {
-    if(req.isAuthenticated()) {
-        Workout.findById(req.params.id, (err, foundWorkout) => {
-            if(err) {
-                res.redirect('back'); 
-            } else {
-                // does user own the workout? 
-                // we use equals here, method from mongoose to check if its the same
-                if(foundWorkout.author.id.equals(req.user._id)) {
-                    next(); 
-                } else {
-                    res.redirect('back'); 
-                }
-            }
-        })
-    } else {
-        // this will take the user back to where they were 
-        res.redirect('back'); 
-    }             
-}
 
 module.exports = router; 
