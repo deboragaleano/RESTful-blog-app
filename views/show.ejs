@@ -32,9 +32,9 @@
                     </a> 
                     <div class="content">
                         <a class="author"><%= comment.author.username %></a>
-                        <!-- <div class="metadata">
-                            <span class="date">Today at 5:42PM</span>
-                        </div> -->
+                        <div class="metadata">
+                            <span class="date"><%= comment.created.toDateString() %></span>
+                        </div>
                         <div class="text">
                             <%= comment.text %>
                         </div>
