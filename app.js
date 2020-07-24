@@ -11,15 +11,12 @@ const bodyParser = require('body-parser'),
       passport = require('passport'), 
       LocalStrategy = require('passport-local'),
       passportLocalMongoose = require('passport-local-mongoose'),
-      flash = require('connect-flash'),
-      seedsDB = require('./seeds') 
+      flash = require('connect-flash')
 
 // requiring routes 
 const workoutsRoutes = require('./routes/workouts'),
       commentRoutes = require('./routes/comments'),
       indexRoutes = require('./routes/index')
-
-// seedsDB();      
 
 //================
 // APP CONFIG 
@@ -38,29 +35,23 @@ app.use(flash());
 // PASSPORT CONFIG 
 //=================
 
-//we need these 3 options to make passport work 
 app.use(require('express-session')({
     secret: "I love bebecito", 
     resave: false,
     saveUninitialized: false
 }))
 
-//we need these lines everytime we need to use passport 
 passport.use(new LocalStrategy(User.authenticate())); 
 app.use(passport.initialize());
 app.use(passport.session()); 
 
-//these 2 methods are really important on passport
-// these are responsible for reading the session,
-// taking the data from the session that's encoded, and unencoding it 
-// and encoding it and putting back in the session (this is serializeUser method)
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser()); 
 
-//adding middleware function to include USER in every TEMPLATE, automatically!
-// if there's no user loggined in, then req.user will be empty or undefined 
-// whatever we put in res.locals is what's available in our current templates 
-// remember to add next at the end which will allow it to run for EVERY single route - VERY IMPORTANT! 
+//================
+// ADD VARS TO EVERY TEMPLATE
+//=================
+
 app.use(function(req, res, next) {
     res.locals.currentUser = req.user;
     res.locals.error = req.flash('error');
@@ -68,7 +59,10 @@ app.use(function(req, res, next) {
     next(); 
 })
 
-// Use our routes:
+//================
+// USE ROUTES 
+//=================
+
 app.use(indexRoutes);
 app.use(workoutsRoutes);
 app.use(commentRoutes);
