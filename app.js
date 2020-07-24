@@ -23,7 +23,7 @@ const workoutsRoutes = require('./routes/workouts'),
 //=================
 
 //mongodb://localhost/workout_app
-mongoose.connect('mongodb+srv://debygalser:Macaco00*@cluster0.eaii8.mongodb.net/workout_app?retryWrites=true&w=majority', 
+mongoose.connect('mongodb+srv://debygalser:ZP6yktsv3YsAiwuu@cluster0.eaii8.mongodb.net/workout_app?retryWrites=true&w=majority', 
 { 
     useNewUrlParser: true, 
     useCreateIndex: true,
