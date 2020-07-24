@@ -22,7 +22,14 @@ const workoutsRoutes = require('./routes/workouts'),
 // APP CONFIG 
 //=================
 
-mongoose.connect('mongodb://localhost/workout_app', { useNewUrlParser: true, useUnifiedTopology: true });
+//mongodb://localhost/workout_app
+mongoose.connect('mongodb+srv://debygalser:Macaco00*@cluster0.eaii8.mongodb.net/workout_app?retryWrites=true&w=majority', 
+{ 
+    useNewUrlParser: true, 
+    useUnifiedTopology: true,
+    useCreateIndex: true
+});
+
 mongoose.set('useFindAndModify', false); 
 app.set('view engine', 'ejs');
 app.use(express.static('public'));

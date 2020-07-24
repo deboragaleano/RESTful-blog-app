@@ -33,7 +33,6 @@ router.post('/workouts', middleware.isLoggedIn, (req, res) => {
         username: req.user.username
     }
     newWorkout.author = author; 
-    console.log(newWorkout); 
     Workout.create(newWorkout, (err, workout) => {
         if(err) {
             console.log(err);
