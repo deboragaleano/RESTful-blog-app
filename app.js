@@ -1,5 +1,4 @@
 const bodyParser = require('body-parser'), 
-      PORT = process.env.PORT || 3000,
       host = '0.0.0.0',
       methodOverride = require('method-override'),
       expressSanitizer = require('express-sanitizer'),
@@ -23,7 +22,7 @@ const workoutsRoutes = require('./routes/workouts'),
 // APP CONFIG 
 //=================
 
-mongoose.connect('mongodb://localhost/workout_app', 
+mongoose.connect(process.env.DATABASEURL, 
 { 
     useNewUrlParser: true, 
     useCreateIndex: true,
@@ -75,6 +74,6 @@ app.use(indexRoutes);
 app.use(workoutsRoutes);
 app.use(commentRoutes);
 
-app.listen(PORT, host, ()=> {
+app.listen(process.env.PORT, host, ()=> {
     console.log(`Server is running on:${PORT}`);
 })
