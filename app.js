@@ -23,14 +23,17 @@ const workoutsRoutes = require('./routes/workouts'),
 // APP CONFIG 
 //=================
 
-//mongodb://localhost/workout_app
-mongoose.connect('mongodb+srv://debygalser:ZP6yktsv3YsAiwuu@cluster0.eaii8.mongodb.net/workout_app?retryWrites=true&w=majority', 
+mongoose.connect('mongodb://localhost/workout_app', 
 { 
     useNewUrlParser: true, 
     useCreateIndex: true,
     useUnifiedTopology: true
 }).then(() => console.log('Database Connected'))
 .catch(err => console.log(err));
+
+//mongodb+srv://debygalser:ZP6yktsv3YsAiwuu@cluster0.eaii8.mongodb.net/workout_app?retryWrites=true&w=majority
+
+console.log(process.env.DATABASEURL);  
 
 mongoose.set('useFindAndModify', false); 
 app.set('view engine', 'ejs');
