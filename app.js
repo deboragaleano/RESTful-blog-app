@@ -42,7 +42,7 @@ app.use(flash());
 // PASSPORT CONFIG 
 //=================
 
-app.use(require('express-session')({
+app.use(require('cookie-session')({
     secret: "I love bebecito", 
     resave: false,
     saveUninitialized: false
