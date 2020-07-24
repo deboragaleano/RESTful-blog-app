@@ -28,7 +28,8 @@ mongoose.connect('mongodb+srv://debygalser:Macaco00*@cluster0.eaii8.mongodb.net/
     useNewUrlParser: true, 
     useUnifiedTopology: true,
     useCreateIndex: true
-});
+}).then(() => console.log('Database Connected'))
+.catch(err => console.log(err));
 
 mongoose.set('useFindAndModify', false); 
 app.set('view engine', 'ejs');
