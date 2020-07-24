@@ -26,7 +26,6 @@ const workoutsRoutes = require('./routes/workouts'),
 mongoose.connect('mongodb+srv://debygalser:Macaco00*@cluster0.eaii8.mongodb.net/workout_app?retryWrites=true&w=majority', 
 { 
     useNewUrlParser: true, 
-    useUnifiedTopology: true,
     useCreateIndex: true
 }).then(() => console.log('Database Connected'))
 .catch(err => console.log(err));
