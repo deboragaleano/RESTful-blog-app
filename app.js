@@ -74,6 +74,6 @@ app.use(indexRoutes);
 app.use(workoutsRoutes);
 app.use(commentRoutes);
 
-app.listen(process.env.PORT, host, ()=> {
+app.listen(process.env.PORT, process.env.IP, ()=> {
     console.log(`Server is running on:${PORT}`);
 })
