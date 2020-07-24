@@ -1,19 +1,15 @@
 const Workout = require('../models/workout'); 
 const Comment = require('../models/comment'); 
 
-//all middleware goes here
 const middlewareObj = {};
 
 middlewareObj.checkWorkoutOwnership = (req, res, next) => {
-//middleware ownership permission
     if(req.isAuthenticated()) {
         Workout.findById(req.params.id, (err, foundWorkout) => {
             if(err) {
                 req.flash('error', 'Workout not found'); 
                 res.redirect('back'); 
             } else {
-                // does user own the workout? 
-                // we use equals here, method from mongoose to check if its the same
                 if(foundWorkout.author.id.equals(req.user._id)) {
                     next(); 
                 } else {

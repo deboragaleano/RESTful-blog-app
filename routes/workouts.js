@@ -28,19 +28,11 @@ router.post('/workouts', middleware.isLoggedIn, (req, res) => {
     req.body.workout.body = req.sanitize(req.body.workout.body)
     const newWorkout = req.body.workout
 
-    //this object is for associating the user info by adding the current user (req.user)
     const author = {
         id: req.user._id,
         username: req.user.username
     }
     newWorkout.author = author; 
-    // It will look like this: 
-    // const newWorkout = {
-    //     title: workout.title, 
-    //     video: workout.video,
-    //     description:  workout.description,
-    //     author: {id:..., username, ... }
-    // }
     console.log(newWorkout); 
     Workout.create(newWorkout, (err, workout) => {
         if(err) {
@@ -54,12 +46,10 @@ router.post('/workouts', middleware.isLoggedIn, (req, res) => {
 /* Show */
 router.get('/workouts/:id', (req, res) => {
     let id = req.params.id; 
-    // here we need to populate the comments into Workout and execute it 
     Workout.findById(id).populate('comments').exec((err, foundWorkout) => {
         if(err) {
             console.log(err);    
         } else {
-            // console.log(foundWorkout);
             res.render('show', {workout: foundWorkout})
         }
     })
@@ -68,7 +58,6 @@ router.get('/workouts/:id', (req, res) => {
 /* Edit */
 router.get('/workouts/:id/edit', middleware.checkWorkoutOwnership, (req, res) => {
     let id = req.params.id; 
-    //is user logged in?
     Workout.findById(id, (err, foundWorkout)  => {
         res.render('edit', {workout: foundWorkout})
     })
@@ -79,10 +68,7 @@ router.get('/workouts/:id/edit', middleware.checkWorkoutOwnership, (req, res) =>
 router.put('/workouts/:id', middleware.checkWorkoutOwnership, (req, res) => {
     let id = req.params.id; 
     let newData = req.body.workout
-    //this sanitizes the data to avoid malicious inputs
     req.body.workout.body = req.sanitize(req.body.workout.body)
-    //finds the ID and the existing workout and updates it with new data
-    //it takes 3 args, id, newData and callback
     Workout.findByIdAndUpdate(id, newData, (err, updatedWorkout)  => {
         if(err) {
             res.redirect('/workouts');     

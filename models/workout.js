@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-// MONGOOSE/MODEL CONFIG 
 const workoutSchema = new mongoose.Schema({
     title: String, 
     video: String, 

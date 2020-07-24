@@ -12,7 +12,6 @@ router.use(bodyParser.urlencoded({extended: true}));
 router.use(methodOverride('_method')); 
 
 // Comments new - this will be the form
-// here we add the middleware to send the user to login if not loggedin already 
 router.get('/workouts/:id/comments/new', middleware.isLoggedIn, (req, res) => {
     let id = req.params.id; 
 
@@ -26,7 +25,6 @@ router.get('/workouts/:id/comments/new', middleware.isLoggedIn, (req, res) => {
 })
 
 // Comments create 
-// here we add the middleware as well  
 router.post('/workouts/:id/comments', middleware.isLoggedIn,(req, res) => {
     let id = req.params.id; 
     let newComment = req.body.comment; 
@@ -34,23 +32,13 @@ router.post('/workouts/:id/comments', middleware.isLoggedIn,(req, res) => {
         if(err) {
             console.log(err)
         } else {
-            //once found right workout, add comment, push into array 
-            // save and redirect
             Comment.create(newComment, (err, comment) => {
                 if(err) {
                     console.log(err)
                 } else {
-
-                    //we can add username and id to the comment by assigning the author's info 
-                    // to the current user, which is: req.user(id or username)
-                    // so, req.user contains the ID and the username, this is assuming
-                    // that a user is actually logged in thanks to the middleware
-                    
                     comment.author.id = req.user._id;
                     comment.author.username = req.user.username; 
-                    //here we have to save the comment 
                     comment.save(); 
-          
                     foundWorkout.comments.push(comment);
                     foundWorkout.save(); 
                     req.flash('success', 'Successfully added comment!');
