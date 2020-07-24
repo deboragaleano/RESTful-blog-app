@@ -1,5 +1,4 @@
 const bodyParser = require('body-parser'), 
-      host = '0.0.0.0',
       methodOverride = require('method-override'),
       expressSanitizer = require('express-sanitizer'),
       mongoose = require('mongoose'),
@@ -22,7 +21,7 @@ const workoutsRoutes = require('./routes/workouts'),
 // APP CONFIG 
 //=================
 
-mongoose.connect(process.env.DATABASEURL, 
+mongoose.connect(process.env.DATABASE_URL, 
 { 
     useNewUrlParser: true, 
     useCreateIndex: true,
