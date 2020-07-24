@@ -1,5 +1,6 @@
 const bodyParser = require('body-parser'), 
-      PORT = 3000,
+      PORT = process.env.PORT || 3000,
+      host = '0.0.0.0',
       methodOverride = require('method-override'),
       expressSanitizer = require('express-sanitizer'),
       mongoose = require('mongoose'),
@@ -75,6 +76,6 @@ app.use(indexRoutes);
 app.use(workoutsRoutes);
 app.use(commentRoutes);
 
-app.listen(PORT, ()=> {
+app.listen(PORT, host, ()=> {
     console.log(`Server is running on:${PORT}`);
 })
